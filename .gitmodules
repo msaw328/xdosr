@@ -1,0 +1,3 @@
+[submodule "bootloader/external/edk2"]
+	path = bootloader/external/edk2
+	url = https://github.com/tianocore/edk2.git
