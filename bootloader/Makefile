@@ -2,6 +2,9 @@
 
 .DEFAULT_GOAL := all
 
+# source files, moved them up so theyre easily accessible
+SOURCES := main.c util.c files.c string.c hexconv.c print.c
+
 all: dir build
 
 dir:
@@ -36,8 +39,6 @@ LDFLAGS := \
 		-fuse-ld=lld-link
 
 INCLUDE := -Iexternal/edk2/MdePkg/Include -Iexternal/edk2/MdePkg/Include/X64
-
-SOURCES := main.c util.c files.c
 
 OBJECTS := $(SOURCES:.c=.o)
 

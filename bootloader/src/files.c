@@ -5,6 +5,7 @@
 
 #include "files.h"
 #include "util.h"
+#include "print.h"
 
 // GUID structs
 EFI_GUID gEfiLoadedImageProtocolGuid = EFI_LOADED_IMAGE_PROTOCOL_GUID;
