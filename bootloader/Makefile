@@ -3,7 +3,7 @@
 .DEFAULT_GOAL := all
 
 # source files, moved them up so theyre easily accessible
-SOURCES := main.c util.c files.c string.c hexconv.c print.c
+SOURCES := main.c util.c files.c string.c hexconv.c print.c parser.c
 
 all: dir build
 

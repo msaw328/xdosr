@@ -6,6 +6,11 @@
 // Returns length of a string in CHAR16s (2 bytes) with an upper boundary of max_len
 UINTN strnlen(IN const CHAR16* str, UINTN max_len);
 
+// Compares strings of size n at a and b, or up until null char
+// returns less then, equal to or more than zero
+// if a is less than, equal or more than b
+INTN strncmp(IN const CHAR16* a, IN const CHAR16* b, IN UINTN n);
+
 // Sets memory at s of length n bytes with byte c, returns s
 VOID* memset(IN UINT8* s, IN UINT8 c, IN UINTN n);
 

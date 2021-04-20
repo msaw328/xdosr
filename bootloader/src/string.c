@@ -47,3 +47,21 @@ INTN memcmp(IN const UINT8* a, IN const UINT8* b, IN UINTN n) {
 
     return 0;
 }
+
+INTN strncmp(IN const UINT16* a, IN const UINT16* b, IN UINTN n) {
+    UINTN i = 0;
+
+    while(i < n) {
+        if(a[i] != L'\0' && b[i] == L'\0') return 1;
+        if(a[i] == L'\0' && b[i] != L'\0') return -1;
+        if(a[i] == L'\0' && b[i] == L'\0') return 0;
+
+        if(a[i] > b[i]) return 1;
+
+        if(a[i] < b[i]) return -1;
+
+        i++;
+    }
+
+    return 0;
+}
