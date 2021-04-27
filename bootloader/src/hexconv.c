@@ -44,7 +44,7 @@ VOID __hexpair_from_byte(IN UINT8 val, OUT CHAR16* hexpair) {
 }
 
 // needs two hex digits, returns byte, does not validate input
-UINT8 __byte_from_hexpair(IN CHAR16* hexpair) {
+UINT8 __byte_from_hexpair(IN const CHAR16* hexpair) {
     return (__val_from_digit(hexpair[0]) << 4) | __val_from_digit(hexpair[1]);
 }
 
@@ -53,7 +53,7 @@ UINT8 __byte_from_hexpair(IN CHAR16* hexpair) {
 #define GUID_STRING_LEN 36
 #define GUID_STRING_SIZE (GUID_STRING_LEN * sizeof(CHAR16))
 
-EFI_STATUS guid_from_str(IN EFI_SYSTEM_TABLE* st, OUT GPT_GUID* g, IN CHAR16* str) {
+EFI_STATUS guid_from_str(IN EFI_SYSTEM_TABLE* st, OUT GPT_GUID* g, IN const CHAR16* str) {
     // check string length, all guid strings are constant length
     if(strnlen(str, GUID_STRING_LEN + 1) != GUID_STRING_LEN) {
         print(st, L"GUID string has wrong length: ");
@@ -96,7 +96,7 @@ EFI_STATUS guid_from_str(IN EFI_SYSTEM_TABLE* st, OUT GPT_GUID* g, IN CHAR16* st
     return EFI_SUCCESS;
 }
 
-EFI_STATUS buffer_to_hexstr(IN EFI_SYSTEM_TABLE* st, OUT CHAR16** str, IN UINT8* buff, IN UINTN n) {
+EFI_STATUS buffer_to_hexstr(IN EFI_SYSTEM_TABLE* st, OUT CHAR16** str, IN const UINT8* buff, IN UINTN n) {
     // buffer of n bytes requires n * 2 characters, +1 for NULL char at the end
     UINTN hexstrlen = n * 2;
     EFI_STATUS status = efi_malloc(st, (hexstrlen + 1) * sizeof(CHAR16), (VOID**) str);

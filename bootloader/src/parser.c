@@ -159,7 +159,7 @@ EFI_STATUS parse_config_file(IN EFI_SYSTEM_TABLE* st, IN const CHAR16* file_cont
         cursor++;
 
     if(cursor[0] == 0xfffe) {
-        printline(st, "ERROR wrong BOM: this probably means file is UTF16 Big endian, aborting");
+        printline(st, L"ERROR wrong BOM: this probably means file is UTF16 Big endian, aborting");
         return EFI_INVALID_PARAMETER;
     }
 

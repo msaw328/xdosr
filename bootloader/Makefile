@@ -8,10 +8,12 @@ SOURCES := main.c util.c files.c string.c hexconv.c print.c parser.c
 all: dir build
 
 dir:
-	mkdir -p build build/obj
+	@mkdir -p build build/obj
+	@echo "Creating build directory"
 
 clean:
-	rm -rf build
+	@rm -rf build
+	@echo "Removing build directory"
 
 build: build/XDOSR.EFI
 
@@ -44,8 +46,8 @@ OBJECTS := $(SOURCES:.c=.o)
 
 build/XDOSR.EFI: $(addprefix build/obj/,$(OBJECTS))
 	@$(CC) $(LDFLAGS) -o $@ $^
-	@echo "LD -o $@ $^"
+	@echo -e "\t[LD] $^ -o $@"
 
 build/obj/%.o: src/%.c
 	@$(CC) $(CFLAGS) $(INCLUDE) -o $@ -c $^
-	@echo "CC -o $@ $^"
+	@echo -e "\t[CC] $^ -o $@"
