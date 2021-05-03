@@ -1,9 +1,8 @@
-void test(char* str) {
-    str[0] = 'a';
-    return;
+char test(char* str) {
+    return str[0];
 }
 
 int kmain() {
     test("Hello from kernel");
-    return 0;
+    return 0x1234;
 }

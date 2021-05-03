@@ -7,6 +7,7 @@
 #include "hexconv.h"
 #include "print.h"
 #include "parser.h"
+#include "loader.h"
 
 EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE* st) {
         EFI_STATUS status;
@@ -75,6 +76,40 @@ EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE* st) {
         }
 
         printline(st, L"Kernel image read");
+        
+        status = is_valid_kernel_image(st, kernel_image_contents);
+        if(status != EFI_SUCCESS) {
+            print(st, L"ERROR while validating kernel image: ");
+            printline(st, cfg.kernel_path);
+            return status;
+        }
+
+        printline(st, L"Kernel image valid");
+
+        UINT64 entry_addr;
+        status = load_kernel_image(st, kernel_image_contents, &entry_addr);
+        if(status != EFI_SUCCESS) {
+            print(st, L"ERROR while loading kernel image: ");
+            printline(st, cfg.kernel_path);
+            return status;
+        }
+
+        printline(st, L"Loaded kernel image");
+        print(st, L"Entry point: ");
+        printbuffer(st, (UINT8*) &entry_addr, sizeof(entry_addr));
+        printline(st, L"");
+
+        efi_free(st, kernel_image_contents);
+
+        // Convert entry addr to a function pointer, instruct compiler to call it using SYSV ABI
+        __attribute__((sysv_abi)) UINT64 (*kernel_entry_fn_ptr)() = ((__attribute__((sysv_abi)) UINT64 (*)()) entry_addr);
+
+        UINT64 test = kernel_entry_fn_ptr();
+
+        if(test == 0x1234)
+            printline(st, L"KERNEL RETURNED 0x1234 - OK");
+        else
+            printline(st, L"KERNEL RETURNED WRONG CODE - NOT OK");
 
         return EFI_SUCCESS;
 }
