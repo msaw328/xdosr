@@ -26,7 +26,7 @@ CFLAGS := \
 LDFLAGS := \
 		-static \
 		-nostdlib \
-		-Wl,--entry=kmain \
+		-Wl,--entry=kmain
 
 OBJECTS := $(SOURCES:.c=.o)
 

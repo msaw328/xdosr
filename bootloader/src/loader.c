@@ -59,11 +59,20 @@ EFI_STATUS is_valid_kernel_image(IN EFI_SYSTEM_TABLE* st, IN const UINT8* file_c
 
 EFI_STATUS _load_segment(EFI_SYSTEM_TABLE* st, IN const UINT8* image_contents, IN const ELF_PROGRAM_HEADER* ph, OUT EFI_PHYSICAL_ADDRESS* phys_addr, OUT UINTN* num_pages) {
     EFI_PHYSICAL_ADDRESS memaddr = ph->p_vaddr;
+    UINT64 memsize = ph->p_memsz;
+
+    // If segment isnt page aligned, find base page address to allocate
+    UINT64 page_boundary_offset = memaddr & 0xFFF;
+    if(page_boundary_offset != 0) {
+        memaddr = memaddr & ~((UINT64) 0xFFF); // Clear low bits to align the address
+        memsize += page_boundary_offset; // Add offset to the size
+    }
+
+    UINT64 pages = EFI_SIZE_TO_PAGES(memsize);
 
     // If execute flag is set allocate EfiLoaderCode, otherwise EfiLoaderData
     EFI_MEMORY_TYPE memtype = (ph->flags & ELF_PROG_FLAG_X) ? EfiLoaderCode : EfiLoaderData;
 
-    UINT64 pages = EFI_SIZE_TO_PAGES(ph->p_memsz);
     EFI_STATUS status = st->BootServices->AllocatePages(
         AllocateAddress, // allocate page at specific address
         memtype,
@@ -82,19 +91,14 @@ EFI_STATUS _load_segment(EFI_SYSTEM_TABLE* st, IN const UINT8* image_contents, I
         return status;
     }
 
-    if((UINT64) memaddr != ph->p_vaddr) {
-        printline(st, L"ERROR: Address changed");
-        st->BootServices->FreePages(memaddr, pages);
-        return EFI_NOT_FOUND;
-    }
-
-    memcpy((UINT8*) memaddr, image_contents + ph->p_offset, ph->p_filesz);
+    if(ph->p_filesz > 0)
+        memcpy((UINT8*) memaddr, image_contents + ph->p_offset, ph->p_filesz);
 
     // Difference in size in file and memory
     UINT64 size_difference = ph->p_memsz - ph->p_filesz;
 
     if(size_difference > 0) {
-        memset((UINT8*) memaddr + ph->p_filesz, 0x0, size_difference);
+        memset((UINT8*) ph->p_memsz + ph->p_filesz, 0x0, size_difference);
     }
 
     *phys_addr = memaddr;
