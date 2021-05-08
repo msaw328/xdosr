@@ -2,7 +2,7 @@
 
 .DEFAULT_GOAL := all
 
-SOURCES := kmain.c
+SOURCES := kmain.c textio.c term.c
 
 all: dir build
 
@@ -19,7 +19,8 @@ build: build/xdosr.elf
 # actual compilation stuff below
 CC := clang
 CFLAGS := \
-		-Wall -Wextra -Werror -pedantic \
+		-DEFIAPI="__attribute__((ms_abi))" \
+		-fno-stack-protector \
 		-ffreestanding \
 		-mno-red-zone
 
@@ -29,6 +30,8 @@ LDFLAGS := \
 		-Wl,--entry=kmain
 
 OBJECTS := $(SOURCES:.c=.o)
+
+INCLUDE := -I../bootloader/external/edk2/MdePkg/Include -I../bootloader/external/edk2/MdePkg/Include/X64
 
 build/xdosr.elf: $(addprefix build/obj/,$(OBJECTS))
 	@$(CC) $(LDFLAGS) -o $@ $^

@@ -8,6 +8,7 @@
 #include "print.h"
 #include "parser.h"
 #include "loader.h"
+#include "bootinfo.h"
 
 EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE* st) {
         EFI_STATUS status;
@@ -102,9 +103,21 @@ EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE* st) {
         efi_free(st, kernel_image_contents);
 
         // Convert entry addr to a function pointer, instruct compiler to call it using SYSV ABI
-        __attribute__((sysv_abi)) UINT64 (*kernel_entry_fn_ptr)() = ((__attribute__((sysv_abi)) UINT64 (*)()) entry_addr);
+        __attribute__((sysv_abi)) UINT64 (*kernel_entry_fn_ptr)(BOOTINFO*) = ((__attribute__((sysv_abi)) UINT64 (*)()) entry_addr);
 
-        UINT64 test = kernel_entry_fn_ptr();
+        BOOTINFO binfo;
+        binfo.st = st;
+        binfo.cfg = &cfg;
+
+
+        printline(st, L"Press any key to transfer control to the kernel");
+        EFI_INPUT_KEY k;
+        EFI_EVENT ev = st->ConIn->WaitForKey;
+        unsigned long long idx;
+        st->BootServices->WaitForEvent(1, &ev, &idx);
+        st->ConIn->ReadKeyStroke(st->ConIn, &k);
+
+        UINT64 test = kernel_entry_fn_ptr(&binfo);
 
         if(test == 0x1234)
             printline(st, L"KERNEL RETURNED 0x1234 - OK");
