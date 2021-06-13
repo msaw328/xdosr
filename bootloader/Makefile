@@ -40,7 +40,7 @@ LDFLAGS := \
 		-Wl,-subsystem:efi_application \
 		-fuse-ld=lld-link
 
-INCLUDE := -Iexternal/edk2/MdePkg/Include -Iexternal/edk2/MdePkg/Include/X64
+INCLUDE := -Iexternal/edk2/Include -Iexternal/edk2/Include/X64
 
 OBJECTS := $(SOURCES:.c=.o)
 

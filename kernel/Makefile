@@ -19,7 +19,6 @@ build: build/xdosr.elf
 # actual compilation stuff below
 CC := clang
 CFLAGS := \
-		-DEFIAPI="__attribute__((ms_abi))" \
 		-fno-stack-protector \
 		-ffreestanding \
 		-mno-red-zone
@@ -31,7 +30,7 @@ LDFLAGS := \
 
 OBJECTS := $(SOURCES:.c=.o)
 
-INCLUDE := -I../bootloader/external/edk2/MdePkg/Include -I../bootloader/external/edk2/MdePkg/Include/X64
+INCLUDE := -I../bootloader/external/edk2/Include -I../bootloader/external/edk2/Include/X64
 
 build/xdosr.elf: $(addprefix build/obj/,$(OBJECTS))
 	@$(CC) $(LDFLAGS) -o $@ $^

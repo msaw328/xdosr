@@ -1,2 +1,4 @@
 *.c linguist-language=C
 *.h linguist-language=C
+bootloader/external/* linguist-vendored
+kernel/external/* linguist-vendored
