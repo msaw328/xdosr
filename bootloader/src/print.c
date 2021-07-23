@@ -24,3 +24,17 @@ void printbuffer(IN EFI_SYSTEM_TABLE* st, IN const UINT8* buffer, IN UINTN n) {
     print(st, str);
     efi_free(st, str);
 }
+
+void printpointer(IN EFI_SYSTEM_TABLE* st, IN const VOID* ptr) {
+    CHAR16* str;
+    EFI_STATUS status = pointer_to_hexstr(st, &str, ptr);
+
+    if(status != EFI_SUCCESS) {
+        printline(st, L"Call to pointer_to_hexstr failed");
+        return;
+    }
+
+    print(st, str);
+    efi_free(st, str);
+}
+

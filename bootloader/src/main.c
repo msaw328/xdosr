@@ -2,6 +2,7 @@
 #include <Protocol/SimpleFileSystem.h>
 
 #include "util.h"
+#include "acpi.h"
 #include "files.h"
 #include "string.h"
 #include "hexconv.h"
@@ -97,7 +98,7 @@ EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE* st) {
 
         printline(st, L"Loaded kernel image");
         print(st, L"Entry point: ");
-        printbuffer(st, (UINT8*) &entry_addr, sizeof(entry_addr));
+        printpointer(st, (VOID*) entry_addr);
         printline(st, L"");
 
         efi_free(st, kernel_image_contents);
@@ -108,6 +109,10 @@ EFI_STATUS efi_main(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE* st) {
         BOOTINFO binfo;
         binfo.st = st;
         binfo.cfg = &cfg;
+        binfo.acpi_rsdp = acpi_get_rsdp_ptr(st);
+        print(st, L"Found ACPI RSDP pointer: ");
+        printpointer(st, binfo.acpi_rsdp);
+        printline(st, L"");
 
 
         printline(st, L"Press any key to transfer control to the kernel");

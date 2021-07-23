@@ -14,4 +14,7 @@ void printline(IN EFI_SYSTEM_TABLE* st, IN const CHAR16* str);
 // Prints a buffer of n bytes to the screen in hexadecimal format
 void printbuffer(IN EFI_SYSTEM_TABLE* st, IN const UINT8* buffer, IN UINTN n);
 
+// Prints a pointer to the screen in hexadecimal format
+void printpointer(IN EFI_SYSTEM_TABLE* st, IN const VOID* ptr);
+
 #endif

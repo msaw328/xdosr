@@ -119,3 +119,35 @@ EFI_STATUS buffer_to_hexstr(IN EFI_SYSTEM_TABLE* st, OUT CHAR16** str, IN const 
 
     return EFI_SUCCESS;
 }
+
+EFI_STATUS pointer_to_hexstr(IN EFI_SYSTEM_TABLE* st, OUT CHAR16** str, IN const VOID* in_ptr1) {
+    UINT64 in_ptr = (UINT64) in_ptr1;
+    UINTN n = sizeof(in_ptr);
+    UINTN hexstrlen = n * 2 + 2; // +2 for "0x"
+    EFI_STATUS status = efi_malloc(st, (hexstrlen + 1) * sizeof(CHAR16), (VOID**) str);
+
+    if(status != EFI_SUCCESS) {
+        printline(st, L"Error allocating memory while converting a pointer to a string");
+
+        return status;
+    }
+
+    CHAR16* ptr = *str; // output string addr
+
+    ptr[0] = L'0';
+    ptr[1] = L'x';
+
+    CHAR16* ptr_end = ptr + (n * 2); // theres +2 for "0x" but -2 cause we wanna point at last element
+
+    UINTN i = 0;
+    while(i < n) {
+        UINT8 lsb = (UINT8) (in_ptr & 0xff);
+        __hexpair_from_byte(lsb, ptr_end);
+        ptr_end -= 2;
+        in_ptr >>= 8;
+        i++;
+    }
+
+    ptr[hexstrlen] = L'\0';
+    return EFI_SUCCESS;
+}

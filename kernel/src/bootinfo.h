@@ -20,6 +20,7 @@ typedef struct _bootloader_config bootloader_config_t;
 struct _boot_info_t {
     EFI_SYSTEM_TABLE* st;
     bootloader_config_t* cfg;
+    void* acpi_rsdp;
 };
 
 typedef struct _boot_info_t boot_info_t;

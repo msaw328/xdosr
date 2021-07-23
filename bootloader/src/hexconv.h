@@ -14,4 +14,7 @@ EFI_STATUS guid_from_str(IN EFI_SYSTEM_TABLE* st, OUT GPT_GUID* guid, IN const C
 // Covnerts given buffer of size n bytes to a hexstring, allocates a buffer using efi_malloc from util.h
 EFI_STATUS buffer_to_hexstr(IN EFI_SYSTEM_TABLE* st, OUT CHAR16** str, IN const UINT8* buff, IN UINTN n);
 
+// Converts given pointer to a hexstring, allocates buffer using efi_malloc
+EFI_STATUS pointer_to_hexstr(IN EFI_SYSTEM_TABLE* st, OUT CHAR16** str, IN const VOID* in_ptr1);
+
 #endif

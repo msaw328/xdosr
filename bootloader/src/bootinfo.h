@@ -10,6 +10,7 @@
 struct _boot_info_t {
     EFI_SYSTEM_TABLE* st;
     CONFIG* cfg;
+    VOID* acpi_rsdp;
 };
 
 typedef struct _boot_info_t BOOTINFO;
