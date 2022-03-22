@@ -7,5 +7,7 @@ void getline_with_echo(EFI_SYSTEM_TABLE* st, CHAR16* input_buffer, UINTN* cmd_le
 void print(EFI_SYSTEM_TABLE* st, IN const CHAR16* str);
 void printline(EFI_SYSTEM_TABLE* st, const CHAR16* str);
 void clear_screen(EFI_SYSTEM_TABLE* st);
+void printbuffer(IN EFI_SYSTEM_TABLE* st, IN const UINT8* buffer, IN UINTN n);
+void printpointer(IN EFI_SYSTEM_TABLE* st, IN const VOID* ptr);
 
 #endif

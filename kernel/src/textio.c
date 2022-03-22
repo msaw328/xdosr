@@ -1,7 +1,9 @@
 #include <Uefi.h>
 
 #include "bootinfo.h"
+#include "hexconv.h"
 #include "textio.h"
+#include "util.h"
 
 void clear_screen(EFI_SYSTEM_TABLE* st) {
     st->ConOut->ClearScreen(st->ConOut);
@@ -85,4 +87,30 @@ void getline_with_echo(EFI_SYSTEM_TABLE* st, CHAR16* input_buffer, UINTN* cmd_le
     }
 
     *cmd_len = linebuffer_idx;
+}
+
+void printbuffer(IN EFI_SYSTEM_TABLE* st, IN const UINT8* buffer, IN UINTN n) {
+    CHAR16* str;
+    EFI_STATUS status = buffer_to_hexstr(st, &str, buffer, n);
+
+    if(status != EFI_SUCCESS) {
+        printline(st, L"Call to buffer_to_hexstr failed");
+        return;
+    }
+
+    print(st, str);
+    efi_free(st, str);
+}
+
+void printpointer(IN EFI_SYSTEM_TABLE* st, IN const VOID* ptr) {
+    CHAR16* str;
+    EFI_STATUS status = pointer_to_hexstr(st, &str, ptr);
+
+    if(status != EFI_SUCCESS) {
+        printline(st, L"Call to pointer_to_hexstr failed");
+        return;
+    }
+
+    print(st, str);
+    efi_free(st, str);
 }

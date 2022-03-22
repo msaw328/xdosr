@@ -2,7 +2,7 @@
 
 .DEFAULT_GOAL := all
 
-SOURCES := kmain.c textio.c term.c
+SOURCES := kmain.c textio.c term.c hexconv.c util.c acpi.c string.c
 
 all: dir build
 
@@ -21,6 +21,7 @@ CC := clang
 CFLAGS := \
 		-fno-stack-protector \
 		-ffreestanding \
+		-fshort-wchar \
 		-mno-red-zone
 
 LDFLAGS := \

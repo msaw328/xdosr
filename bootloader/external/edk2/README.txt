@@ -5,3 +5,4 @@ Header files present in MdePkg/Include in the EDK2 project repository are used a
 
 Modifications:
 Include/X64/ProcessorBind.h line 289 - hardcoded EFIAPI as __attribute__((ms_abi))
+Include/Base.h line 321-323 added ifndef to not override the stddef NULL
